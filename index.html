@@ -33,29 +33,55 @@
   --FM: 'DM Mono', monospace;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-html,body{
+html{height:100%;}
+body{
   background:var(--bg);color:var(--text);
   font-family:var(--F);
   font-size:15px;-webkit-font-smoothing:antialiased;
-  -webkit-text-size-adjust:100%;min-height:100vh;
+  -webkit-text-size-adjust:100%;
+  min-height:100dvh;
+  /* leave room for two sticky cards ~130px total */
+  scroll-padding-top:140px;
 }
 button{font-family:var(--F);touch-action:manipulation;cursor:pointer;
   -webkit-user-select:none;user-select:none;border:none;outline:none;}
 input{outline:none;-webkit-appearance:none;appearance:none;font-family:var(--F);}
-.app{max-width:480px;margin:0 auto;padding:10px 12px 70px;}
+
+/* Sticky wrapper sits at top of viewport */
+.sticky-top{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:var(--bg);
+  max-width:480px;
+  margin:0 auto;
+  padding:10px 12px 0;
+}
+
+/* scrollable body below sticky */
+.app{max-width:480px;margin:0 auto;padding:4px 12px 70px;}
 
 /* ══════════════════════════════
-   HEADER
+   STICKY CARD 1 — Logo + Tape
 ══════════════════════════════ */
+.sticky-card-1{
+  background:#fff;
+  border:2px solid var(--text);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:4px 4px 0 var(--text);
+  margin-bottom:8px;
+}
+
+/* header row inside card 1 */
 .hdr{
   display:flex;align-items:center;justify-content:space-between;
-  background:#fff;border:2px solid var(--text);
-  border-radius:16px;padding:10px 13px;margin-bottom:10px;
-  box-shadow:4px 4px 0 var(--text);
+  padding:9px 12px 7px;
+  gap:8px;
 }
-.logo{display:flex;align-items:center;gap:10px;}
+.logo{display:flex;align-items:center;gap:8px;flex-shrink:0;}
 .logo-name{
-  font-size:22px;font-weight:900;color:var(--text);
+  font-size:20px;font-weight:900;color:var(--text);
   letter-spacing:-1px;line-height:1;
 }
 .logo-name em{
@@ -63,13 +89,37 @@ input{outline:none;-webkit-appearance:none;appearance:none;font-family:var(--F);
   background:linear-gradient(135deg,#0a7060,#0891b2);
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.hdr-right{display:flex;align-items:center;gap:8px;}
+
+/* QQQ / SPY mini quotes in header */
+.mkt-quotes{
+  display:flex;align-items:center;gap:6px;
+  flex:1;justify-content:center;
+  overflow:hidden;
+}
+.mkt-q{
+  display:flex;flex-direction:column;align-items:center;
+  background:var(--p2);border:1.5px solid var(--borderB);
+  border-radius:9px;padding:4px 9px;min-width:68px;
+  transition:border-color .2s;
+}
+.mkt-q.up{border-color:var(--gbd);background:var(--gbg);}
+.mkt-q.dn{border-color:var(--rbd);background:var(--rbg);}
+.mkt-q-sym{font-family:var(--FM);font-size:9px;font-weight:800;color:var(--sub);letter-spacing:.1em;}
+.mkt-q-row{display:flex;align-items:baseline;gap:4px;margin-top:1px;}
+.mkt-q-px{font-family:var(--FM);font-size:13px;font-weight:700;color:var(--text);}
+.mkt-q-chg{font-family:var(--FM);font-size:10px;font-weight:800;}
+.mkt-q.up .mkt-q-chg{color:var(--green);}
+.mkt-q.dn .mkt-q-chg{color:var(--red);}
+.mkt-q-loading{font-family:var(--FM);font-size:10px;color:var(--muted);animation:ldpulse 1.2s ease-in-out infinite;}
+@keyframes ldpulse{0%,100%{opacity:.3}50%{opacity:1}}
+
+.hdr-right{display:flex;align-items:center;gap:6px;flex-shrink:0;}
 .live-pill{
   display:inline-flex;align-items:center;gap:5px;
   background:#09101f;color:#4ade80;
-  border-radius:20px;padding:5px 11px;
+  border-radius:20px;padding:5px 10px;
   font-size:10px;font-weight:800;letter-spacing:.1em;
-  font-family:var(--FM);
+  font-family:var(--FM);white-space:nowrap;
 }
 .live-dot{width:7px;height:7px;border-radius:50%;background:#4ade80;
   box-shadow:0 0 6px #4ade80;animation:blink 1.8s ease-in-out infinite;}
@@ -148,13 +198,13 @@ input{outline:none;-webkit-appearance:none;appearance:none;font-family:var(--F);
 }
 
 /* ══════════════════════════════
-   TICKER TAPE
+   TICKER TAPE — flush inside sticky card 1
 ══════════════════════════════ */
 .tape-outer{
-  background:#fff;border:2px solid var(--text);
-  border-radius:12px;padding:9px 0;margin-bottom:10px;
+  background:#fff;
+  border-top:1.5px solid var(--border);
+  padding:8px 0 9px;
   overflow:hidden;position:relative;
-  box-shadow:3px 3px 0 var(--text);
 }
 .tape-fade-l,.tape-fade-r{position:absolute;top:0;bottom:0;width:32px;z-index:2;pointer-events:none;}
 .tape-fade-l{left:0;background:linear-gradient(90deg,#fff,transparent);}
@@ -167,6 +217,18 @@ input{outline:none;-webkit-appearance:none;appearance:none;font-family:var(--F);
 .t-up {font-size:11px;font-weight:800;color:var(--green);font-family:var(--FM);}
 .t-dn {font-size:11px;font-weight:800;color:var(--red);font-family:var(--FM);}
 @keyframes tape-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ══════════════════════════════
+   STICKY CARD 2 — Stock Symbol Search
+══════════════════════════════ */
+.sticky-card-2{
+  background:#fff;
+  border:2px solid var(--text);
+  border-radius:14px;
+  padding:11px 12px 10px;
+  box-shadow:4px 4px 0 var(--text);
+  margin-bottom:0;
+}
 
 /* ══════════════════════════════
    CARD — neo-brutalist style
@@ -388,70 +450,103 @@ canvas{width:100%!important;height:120px!important;}
 .f-badge.neg{background:var(--rbg);color:var(--red);  border-color:var(--rbd);}
 .f-badge.neu{background:var(--abg);color:var(--amber);border-color:var(--abd);}
 
-/* SCENARIOS */
-.sc-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:10px 0;border-bottom:1.5px solid var(--border);
-}
-.sc-row:last-child{border-bottom:none;}
-.sc-row:first-of-type{padding-top:0;}
-.sc-name{font-size:14px;color:var(--sub);font-weight:700;}
-.sc-val{font-size:16px;font-weight:900;font-family:var(--FM);}
-.sc-val.up{color:var(--green);}
-.sc-val.dn{color:var(--red);}
-.sc-val.fl{color:var(--amber);}
-
 /* ══════════════════════════════
-   OPTIONS STRATEGY TABLE
+   UNIFIED SCENARIO + OPTIONS TABLE
 ══════════════════════════════ */
-.opts-card{
+.combo-card{
   background:#fff;border:2px solid var(--text);
   border-radius:14px;margin-bottom:10px;overflow:hidden;
   box-shadow:4px 4px 0 var(--text);
 }
-.opts-hdr{
-  background:var(--text);padding:10px 12px;
-  display:grid;grid-template-columns:.9fr 1.1fr .7fr .7fr;gap:4px;
+.combo-title{
+  padding:11px 14px 10px;border-bottom:2px solid var(--text);
+  display:flex;align-items:center;justify-content:space-between;
 }
-.ohd{
-  font-size:10px;font-weight:800;text-transform:uppercase;
-  letter-spacing:.1em;color:#94a3b8;text-align:center;padding:2px 0;
-  font-family:var(--FM);
+.combo-title-txt{font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.2em;}
+.combo-legend{display:flex;align-items:center;gap:10px;}
+.combo-leg-item{display:flex;align-items:center;gap:4px;font-size:9px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;}
+.combo-leg-dot{width:8px;height:8px;border-radius:50%;}
+
+/* header row */
+.combo-hdr{
+  display:grid;
+  grid-template-columns:90px 1fr 48px 52px;
+  background:var(--text);padding:0;
 }
-.ohd:first-child{text-align:left;color:#64748b;font-size:9px;}
-.ohd.s1{color:#c4b5fd;}
-.ohd.s2{color:#fcd34d;}
-.ohd.s3{color:#86efac;}
-.opts-row{
-  display:grid;grid-template-columns:.9fr 1.1fr .7fr .7fr;gap:4px;
-  border-top:1.5px solid var(--border);min-width:0;
+.chd{
+  padding:9px 8px;font-size:9px;font-weight:800;
+  text-transform:uppercase;letter-spacing:.12em;
+  font-family:var(--FM);color:#64748b;
 }
-.opts-row:nth-child(even){background:#fafbfc;}
-.opts-row.highlight{
+.chd:nth-child(1){padding-left:14px;color:#64748b;}
+.chd:nth-child(2){color:#c4b5fd;}
+.chd:nth-child(3){text-align:center;color:#fcd34d;}
+.chd:nth-child(4){text-align:center;color:#86efac;}
+
+/* data row — each scenario */
+.combo-row{
+  display:grid;
+  grid-template-columns:90px 1fr 48px 52px;
+  border-top:1.5px solid var(--border);
+  min-height:62px;
+  transition:background .12s;
+}
+.combo-row:nth-child(even){background:#fafbfc;}
+.combo-row.active-row{
   background:var(--tbg)!important;
   box-shadow:inset 4px 0 0 var(--teal);
 }
-.ocell{
-  padding:10px 4px;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;
-  gap:3px;min-height:54px;overflow:hidden;
+.combo-row.bear-row{background:var(--rbg)!important;box-shadow:inset 4px 0 0 var(--red);}
+.combo-row.bull-row{background:var(--gbg)!important;box-shadow:inset 4px 0 0 var(--green);}
+
+/* LEFT cell: scenario name + move */
+.c-left{
+  padding:10px 6px 10px 14px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px;
+  border-right:1.5px solid var(--border);
 }
-.ocell:first-child{align-items:flex-start;padding-left:12px;}
-.o-scenario{font-size:12px;font-weight:900;color:var(--text);}
-.o-move{font-size:11px;font-weight:800;font-family:var(--FM);}
-.o-move.up{color:var(--green);} .o-move.dn{color:var(--red);} .o-move.fl{color:var(--amber);}
-.o-strat{font-size:12px;font-weight:800;color:var(--text);text-align:center;line-height:1.3;}
-.o-detail{font-size:10px;color:var(--sub);text-align:center;line-height:1.4;font-weight:600;}
-.o-exp{font-size:11px;color:var(--sub);text-align:center;font-weight:700;font-family:var(--FM);}
-.o-rating{display:flex;flex-direction:column;align-items:center;gap:4px;}
-.o-stars{font-size:13px;line-height:1;}
-.o-conf{font-size:10px;font-weight:900;padding:3px 7px;border-radius:5px;border:2px solid;}
-.o-conf.hi{background:var(--gbg);color:var(--green);border-color:var(--gbd);}
-.o-conf.md{background:var(--abg);color:var(--amber);border-color:var(--abd);}
-.o-conf.lo{background:var(--rbg);color:var(--red);  border-color:var(--rbd);}
-.opts-note{
-  padding:10px 13px;font-size:12px;color:var(--dim);
-  line-height:1.6;border-top:1.5px solid var(--border);
+.c-scname{font-size:12px;font-weight:900;color:var(--text);line-height:1.2;}
+.c-move{font-size:13px;font-weight:900;font-family:var(--FM);line-height:1;}
+.c-move.up{color:var(--green);}
+.c-move.dn{color:var(--red);}
+.c-move.fl{color:var(--amber);}
+
+/* MIDDLE cell: strategy + detail */
+.c-mid{
+  padding:10px 8px;
+  display:flex;flex-direction:column;justify-content:center;gap:3px;
+}
+.c-strat{font-size:13px;font-weight:900;color:var(--text);line-height:1.2;}
+.c-detail{font-size:11px;color:var(--sub);line-height:1.4;font-weight:600;}
+
+/* EXPIRY cell */
+.c-exp{
+  padding:10px 4px;
+  display:flex;align-items:center;justify-content:center;
+  border-left:1.5px solid var(--border);
+}
+.c-exp-val{font-size:11px;font-weight:800;color:var(--sub);font-family:var(--FM);text-align:center;}
+
+/* FIT cell */
+.c-fit{
+  padding:10px 6px 10px 4px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;border-left:1.5px solid var(--border);
+}
+.c-stars{font-size:11px;line-height:1;color:var(--amber);}
+.c-fitbadge{
+  font-size:9px;font-weight:900;padding:3px 6px;
+  border-radius:5px;border:2px solid;font-family:var(--FM);
+  letter-spacing:.05em;
+}
+.c-fitbadge.hi{background:var(--gbg);color:var(--green);border-color:var(--gbd);}
+.c-fitbadge.md{background:var(--abg);color:var(--amber);border-color:var(--abd);}
+.c-fitbadge.lo{background:var(--rbg);color:var(--red);  border-color:var(--rbd);}
+
+/* straddle note */
+.combo-note{
+  padding:11px 14px;font-size:12px;color:var(--dim);
+  line-height:1.65;border-top:2px solid var(--border);
   background:#fafbfc;font-weight:600;
 }
 
@@ -539,99 +634,121 @@ canvas{width:100%!important;height:120px!important;}
 </style>
 </head>
 <body>
-<div class="app">
 
-  <!-- INSTALL BANNER -->
+<!-- SETTINGS MODAL (outside sticky, fixed) -->
+<div class="modal-overlay" id="settingsModal" onclick="modalBgClick(event)">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">⚙️ API Settings</div>
+    <div class="modal-body">
+      <div class="modal-label">Anthropic API Key</div>
+      <div class="modal-key-row">
+        <input class="modal-key-inp" id="modalKeyInp" type="password" placeholder="sk-ant-api03-…" autocomplete="off"/>
+        <button class="modal-eye" id="modalEyeBtn" onclick="toggleModalKey()">👁</button>
+      </div>
+      <div class="modal-note">Stored in your browser only — never sent anywhere except Anthropic. <a href="https://console.anthropic.com" target="_blank">Get a free key →</a></div>
+      <div class="modal-status" id="modalStatus"></div>
+      <button class="btn-save-key" onclick="saveKey()">💾 Save Key</button>
+      <button class="btn-cancel-modal" onclick="closeSettings()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ STICKY TOP ══ -->
+<div class="sticky-top">
+
+  <!-- INSTALL BANNER (inside sticky, shows/hides) -->
   <div class="install-banner" id="installBanner">
     <div class="install-txt">Add StockAI to Home Screen<span>Install as app — no App Store needed</span></div>
     <button class="btn-install" id="installBtn">Add</button>
     <button class="btn-close-install" onclick="dismissInstall()">✕</button>
   </div>
 
-  <!-- HEADER -->
-  <div class="hdr">
-    <div class="logo">
-      <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect width="36" height="36" rx="10" fill="#09101f"/>
-        <rect x="5"  y="21" width="5" height="10" rx="1.5" fill="#5eead4" opacity=".6"/>
-        <rect x="12" y="15" width="5" height="16" rx="1.5" fill="#5eead4" opacity=".8"/>
-        <rect x="19" y="9"  width="5" height="22" rx="1.5" fill="#5eead4"/>
-        <polyline points="7,22 14,16 21,11 30,6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-        <circle cx="30" cy="6" r="2.8" fill="#4ade80"/>
-      </svg>
-      <div class="logo-name">Stock<em>AI</em></div>
-    </div>
-    <div class="hdr-right">
-      <div class="live-pill"><div class="live-dot"></div>LIVE</div>
-      <button class="btn-gear" id="gearBtn" onclick="openSettings()" title="Settings">
-        ⚙️<div class="gear-dot" id="gearDot"></div>
-      </button>
-    </div>
-  </div>
+  <!-- STICKY CARD 1: Logo + Live + Gear + Tape -->
+  <div class="sticky-card-1">
+    <div class="hdr">
+      <div class="logo">
+        <svg width="34" height="34" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="36" height="36" rx="10" fill="#09101f"/>
+          <rect x="5"  y="21" width="5" height="10" rx="1.5" fill="#5eead4" opacity=".6"/>
+          <rect x="12" y="15" width="5" height="16" rx="1.5" fill="#5eead4" opacity=".8"/>
+          <rect x="19" y="9"  width="5" height="22" rx="1.5" fill="#5eead4"/>
+          <polyline points="7,22 14,16 21,11 30,6" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+          <circle cx="30" cy="6" r="2.8" fill="#4ade80"/>
+        </svg>
+        <div class="logo-name">Stock<em>AI</em></div>
+      </div>
 
-  <!-- SETTINGS MODAL -->
-  <div class="modal-overlay" id="settingsModal" onclick="modalBgClick(event)">
-    <div class="modal-sheet">
-      <div class="modal-handle"></div>
-      <div class="modal-title">⚙️ API Settings</div>
-      <div class="modal-body">
-        <div class="modal-label">Anthropic API Key</div>
-        <div class="modal-key-row">
-          <input class="modal-key-inp" id="modalKeyInp" type="password" placeholder="sk-ant-api03-…" autocomplete="off"/>
-          <button class="modal-eye" id="modalEyeBtn" onclick="toggleModalKey()">👁</button>
+      <!-- QQQ / SPY live mini-quotes -->
+      <div class="mkt-quotes">
+        <div class="mkt-q" id="mq-qqq">
+          <span class="mkt-q-sym">QQQ</span>
+          <span class="mkt-q-loading" id="mq-qqq-load">···</span>
         </div>
-        <div class="modal-note">Stored in your browser only — never sent anywhere except Anthropic. <a href="https://console.anthropic.com" target="_blank">Get a free key →</a></div>
-        <div class="modal-status" id="modalStatus"></div>
-        <button class="btn-save-key" onclick="saveKey()">💾 Save Key</button>
-        <button class="btn-cancel-modal" onclick="closeSettings()">Cancel</button>
+        <div class="mkt-q" id="mq-spy">
+          <span class="mkt-q-sym">SPY</span>
+          <span class="mkt-q-loading" id="mq-spy-load">···</span>
+        </div>
+      </div>
+
+      <div class="hdr-right">
+        <div class="live-pill"><div class="live-dot"></div>LIVE</div>
+        <button class="btn-gear" id="gearBtn" onclick="openSettings()" title="Settings">
+          ⚙️<div class="gear-dot" id="gearDot"></div>
+        </button>
+      </div>
+    </div>
+    <!-- Tape sits flush at bottom of card 1 -->
+    <div class="tape-outer">
+      <div class="tape-fade-l"></div><div class="tape-fade-r"></div>
+      <div class="tape-inner">
+        <div class="t-item"><span class="t-sym">QQQ</span><span class="t-px">499.60</span><span class="t-up">+0.63%</span></div>
+        <div class="t-item"><span class="t-sym">SPY</span><span class="t-px">582.30</span><span class="t-up">+0.41%</span></div>
+        <div class="t-item"><span class="t-sym">AAPL</span><span class="t-px">211.40</span><span class="t-up">+1.24%</span></div>
+        <div class="t-item"><span class="t-sym">NVDA</span><span class="t-px">134.30</span><span class="t-up">+3.12%</span></div>
+        <div class="t-item"><span class="t-sym">MSFT</span><span class="t-px">428.90</span><span class="t-up">+0.87%</span></div>
+        <div class="t-item"><span class="t-sym">TSLA</span><span class="t-px">172.60</span><span class="t-dn">−1.45%</span></div>
+        <div class="t-item"><span class="t-sym">AMZN</span><span class="t-px">195.20</span><span class="t-up">+0.55%</span></div>
+        <div class="t-item"><span class="t-sym">META</span><span class="t-px">609.10</span><span class="t-up">+1.78%</span></div>
+        <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-px">177.80</span><span class="t-dn">−0.32%</span></div>
+        <div class="t-item"><span class="t-sym">AMD</span><span class="t-px">162.50</span><span class="t-up">+2.04%</span></div>
+        <div class="t-item"><span class="t-sym">QQQ</span><span class="t-px">499.60</span><span class="t-up">+0.63%</span></div>
+        <div class="t-item"><span class="t-sym">SPY</span><span class="t-px">582.30</span><span class="t-up">+0.41%</span></div>
+        <div class="t-item"><span class="t-sym">AAPL</span><span class="t-px">211.40</span><span class="t-up">+1.24%</span></div>
+        <div class="t-item"><span class="t-sym">NVDA</span><span class="t-px">134.30</span><span class="t-up">+3.12%</span></div>
+        <div class="t-item"><span class="t-sym">MSFT</span><span class="t-px">428.90</span><span class="t-up">+0.87%</span></div>
+        <div class="t-item"><span class="t-sym">TSLA</span><span class="t-px">172.60</span><span class="t-dn">−1.45%</span></div>
+        <div class="t-item"><span class="t-sym">AMZN</span><span class="t-px">195.20</span><span class="t-up">+0.55%</span></div>
+        <div class="t-item"><span class="t-sym">META</span><span class="t-px">609.10</span><span class="t-up">+1.78%</span></div>
+        <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-px">177.80</span><span class="t-dn">−0.32%</span></div>
+        <div class="t-item"><span class="t-sym">AMD</span><span class="t-px">162.50</span><span class="t-up">+2.04%</span></div>
       </div>
     </div>
   </div>
 
-  <!-- NO KEY WARNING -->
-  <div class="no-key-warn" id="noKeyWarn" onclick="openSettings()">
-    ⚠️ No API key set — tap to add your Anthropic key
-  </div>
-
-  <!-- TICKER TAPE -->
-  <div class="tape-outer">
-    <div class="tape-fade-l"></div><div class="tape-fade-r"></div>
-    <div class="tape-inner">
-      <div class="t-item"><span class="t-sym">QQQ</span><span class="t-px">499.60</span><span class="t-up">+0.63%</span></div>
-      <div class="t-item"><span class="t-sym">SPY</span><span class="t-px">582.30</span><span class="t-up">+0.41%</span></div>
-      <div class="t-item"><span class="t-sym">AAPL</span><span class="t-px">211.40</span><span class="t-up">+1.24%</span></div>
-      <div class="t-item"><span class="t-sym">NVDA</span><span class="t-px">134.30</span><span class="t-up">+3.12%</span></div>
-      <div class="t-item"><span class="t-sym">MSFT</span><span class="t-px">428.90</span><span class="t-up">+0.87%</span></div>
-      <div class="t-item"><span class="t-sym">TSLA</span><span class="t-px">172.60</span><span class="t-dn">−1.45%</span></div>
-      <div class="t-item"><span class="t-sym">AMZN</span><span class="t-px">195.20</span><span class="t-up">+0.55%</span></div>
-      <div class="t-item"><span class="t-sym">META</span><span class="t-px">609.10</span><span class="t-up">+1.78%</span></div>
-      <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-px">177.80</span><span class="t-dn">−0.32%</span></div>
-      <div class="t-item"><span class="t-sym">AMD</span><span class="t-px">162.50</span><span class="t-up">+2.04%</span></div>
-      <!-- duplicate for loop -->
-      <div class="t-item"><span class="t-sym">QQQ</span><span class="t-px">499.60</span><span class="t-up">+0.63%</span></div>
-      <div class="t-item"><span class="t-sym">SPY</span><span class="t-px">582.30</span><span class="t-up">+0.41%</span></div>
-      <div class="t-item"><span class="t-sym">AAPL</span><span class="t-px">211.40</span><span class="t-up">+1.24%</span></div>
-      <div class="t-item"><span class="t-sym">NVDA</span><span class="t-px">134.30</span><span class="t-up">+3.12%</span></div>
-      <div class="t-item"><span class="t-sym">MSFT</span><span class="t-px">428.90</span><span class="t-up">+0.87%</span></div>
-      <div class="t-item"><span class="t-sym">TSLA</span><span class="t-px">172.60</span><span class="t-dn">−1.45%</span></div>
-      <div class="t-item"><span class="t-sym">AMZN</span><span class="t-px">195.20</span><span class="t-up">+0.55%</span></div>
-      <div class="t-item"><span class="t-sym">META</span><span class="t-px">609.10</span><span class="t-up">+1.78%</span></div>
-      <div class="t-item"><span class="t-sym">GOOGL</span><span class="t-px">177.80</span><span class="t-dn">−0.32%</span></div>
-      <div class="t-item"><span class="t-sym">AMD</span><span class="t-px">162.50</span><span class="t-up">+2.04%</span></div>
-    </div>
-  </div>
-
-  <!-- STOCK SYMBOL -->
-  <div class="card">
-    <div class="card-title">Stock Symbol</div>
+  <!-- STICKY CARD 2: Stock Symbol Search -->
+  <div class="sticky-card-2" style="margin-top:8px;">
+    <div class="card-title" style="margin-bottom:8px;">Stock Symbol</div>
     <div class="ticker-wrap">
       <input class="ticker-inp" id="tickerInp" type="text" maxlength="6"
         placeholder="QQQ, SPY, AAPL…"
         autocapitalize="characters" autocorrect="off" spellcheck="false"
         inputmode="text" value="QQQ"/>
     </div>
-    <div class="ticker-hint">Any NYSE / NASDAQ ticker or ETF — e.g. NVDA, TSLA, JPM, SPY, QQQ</div>
+    <div class="ticker-hint" style="margin-top:7px;">Any NYSE / NASDAQ ticker or ETF — e.g. NVDA, TSLA, JPM, SPY</div>
   </div>
+
+</div><!-- /sticky-top -->
+
+<!-- NO KEY WARNING — scrolls with page -->
+<div class="app" style="padding-top:10px;padding-bottom:0;">
+  <div class="no-key-warn" id="noKeyWarn" onclick="openSettings()">
+    ⚠️ No API key set — tap to add your Anthropic key
+  </div>
+</div>
+
+<!-- ══ SCROLLABLE CONTENT ══ -->
+<div class="app" style="padding-top:10px;">
 
   <!-- HORIZON -->
   <div class="card">
@@ -717,7 +834,48 @@ document.addEventListener('DOMContentLoaded',function(){
   var inp=document.getElementById('tickerInp');
   inp.addEventListener('input',function(){this.value=this.value.replace(/[^A-Za-z]/g,'').toUpperCase();});
   inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();runForecast();}});
+  // Fetch live market quotes on load then every 60s
+  fetchMarketQuotes();
+  setInterval(fetchMarketQuotes, 60000);
 });
+
+// ── LIVE MARKET QUOTES (Yahoo Finance via allorigins proxy) ──
+function fetchMarketQuotes(){
+  ['QQQ','SPY'].forEach(function(sym){
+    var url='https://query1.finance.yahoo.com/v8/finance/chart/'+sym+'?interval=1d&range=2d';
+    var proxy='https://api.allorigins.win/get?url='+encodeURIComponent(url);
+    fetch(proxy)
+      .then(function(r){return r.json();})
+      .then(function(d){
+        var raw=JSON.parse(d.contents);
+        var meta=raw.chart.result[0].meta;
+        var price=meta.regularMarketPrice;
+        var prev=meta.chartPreviousClose||meta.previousClose;
+        var chg=price-prev;
+        var pct=(chg/prev)*100;
+        renderQuote(sym.toLowerCase(),price,pct);
+      })
+      .catch(function(){
+        // Fallback: show static placeholder if fetch fails
+        if(sym==='QQQ') renderQuote('qqq',499.60,0.63);
+        else renderQuote('spy',582.30,0.41);
+      });
+  });
+}
+
+function renderQuote(sym,price,pct){
+  var el=document.getElementById('mq-'+sym);
+  if(!el)return;
+  var isUp=pct>=0;
+  var sign=isUp?'+':'';
+  el.className='mkt-q '+(isUp?'up':'dn');
+  el.innerHTML=
+    '<span class="mkt-q-sym">'+sym.toUpperCase()+'</span>'
+   +'<div class="mkt-q-row">'
+   +'<span class="mkt-q-px">'+price.toFixed(2)+'</span>'
+   +'<span class="mkt-q-chg">'+sign+pct.toFixed(2)+'%</span>'
+   +'</div>';
+}
 
 // PWA
 window.addEventListener('beforeinstallprompt',function(e){
@@ -909,25 +1067,59 @@ function renderResults(d,ticker){
     fHtml+='<div class="factor-row"><span class="f-ico">'+f.icon+'</span><span class="f-txt">'+f.text+'</span><span class="f-badge '+cls+'">'+lbl+'</span></div>';
   }
 
-  var sHtml='';
+  // UNIFIED SCENARIO + OPTIONS TABLE
+  var comboRows='';
+  // Merge scenarios and optionsTable by index
   var scens=Array.isArray(d.scenarios)?d.scenarios:[];
-  for(var j=0;j<scens.length;j++){
-    var sc2=scens[j],dcls=sc2.dir==='up'?'up':sc2.dir==='dn'?'dn':'fl';
-    sHtml+='<div class="sc-row"><span class="sc-name">'+sc2.name+'</span><span class="sc-val '+dcls+'">'+sc2.outcome+'</span></div>';
-  }
-
-  var optRows='';
   var opts=Array.isArray(d.optionsTable)?d.optionsTable:[];
-  for(var k=0;k<opts.length;k++){
-    var o=opts[k];
-    var isHL=(sc==='bull'&&o.dir==='up'&&o.fit==='high')||(sc==='bear'&&o.dir==='dn'&&o.fit==='high')||(sc==='neutral'&&o.scenario==='Base Case');
-    var mdrc=o.dir==='up'?'up':o.dir==='dn'?'dn':'fl';
+  var rowCount=Math.max(scens.length,opts.length,4);
+
+  // Determine which row is the "active" AI pick
+  for(var k=0;k<rowCount;k++){
+    var sc2=scens[k]||{};
+    var o=opts[k]||{};
+    var moveDir=sc2.dir==='up'?'up':sc2.dir==='dn'?'dn':'fl';
     var fc=o.fit==='high'?'hi':o.fit==='medium'?'md':'lo';
     var ft=o.fit==='high'?'HIGH':o.fit==='medium'?'MED':'LOW';
-    var st=o.fit==='high'?'★★★':o.fit==='medium'?'★★☆':'★☆☆';
-    optRows+='<div class="opts-row'+(isHL?' highlight':'')+'"><div class="ocell"><span class="o-scenario">'+o.scenario+'</span><span class="o-move '+mdrc+'">'+o.move+'</span></div><div class="ocell"><span class="o-strat">'+o.strategy+'</span><span class="o-detail">'+o.detail+'</span></div><div class="ocell"><span class="o-exp">'+o.expiry+'</span></div><div class="ocell"><div class="o-rating"><span class="o-stars">'+st+'</span><span class="o-conf '+fc+'">'+ft+'</span></div></div></div>';
+    var stars=o.fit==='high'?'★★★':o.fit==='medium'?'★★☆':'★☆☆';
+
+    // row highlight logic: active = best fit matching overall signal
+    var isActive=(sc==='bull'&&sc2.dir==='up'&&o.fit==='high')
+              ||(sc==='bear'&&sc2.dir==='dn'&&o.fit==='high')
+              ||(sc==='neutral'&&sc2.name==='Base Case');
+    var rowCls='combo-row';
+    if(isActive) rowCls+=' active-row';
+
+    comboRows+='<div class="'+rowCls+'">'
+      +'<div class="c-left">'
+        +'<span class="c-scname">'+(sc2.name||'—')+'</span>'
+        +'<span class="c-move '+moveDir+'">'+(sc2.outcome||o.move||'—')+'</span>'
+      +'</div>'
+      +'<div class="c-mid">'
+        +'<span class="c-strat">'+(o.strategy||'—')+'</span>'
+        +'<span class="c-detail">'+(o.detail||'')+'</span>'
+      +'</div>'
+      +'<div class="c-exp"><span class="c-exp-val">'+(o.expiry||'—')+'</span></div>'
+      +'<div class="c-fit"><span class="c-stars">'+stars+'</span><span class="c-fitbadge '+fc+'">'+ft+'</span></div>'
+      +'</div>';
   }
-  var strNote=d.straddleNote?'<div class="opts-note">💡 <strong>Straddle/Strangle:</strong> '+d.straddleNote+'</div>':'';
+  var strNote=d.straddleNote?'<div class="combo-note">💡 <strong>Straddle/Strangle:</strong> '+d.straddleNote+'</div>':'';
+
+  var comboTable=
+    '<div class="combo-card aup">'
+    +'<div class="combo-title">'
+      +'<span class="combo-title-txt">Scenarios &amp; Options Playbook</span>'
+      +(isActive!==undefined?'<span style="font-size:11px;font-weight:800;color:var(--teal);background:var(--tbg);border:2px solid var(--tbd);border-radius:7px;padding:3px 9px;">▶ Best fit highlighted</span>':'')
+    +'</div>'
+    +'<div class="combo-hdr">'
+      +'<div class="chd">Scenario</div>'
+      +'<div class="chd">Strategy</div>'
+      +'<div class="chd">Expiry</div>'
+      +'<div class="chd">Fit</div>'
+    +'</div>'
+    +comboRows
+    +strNote
+    +'</div>';
 
   var pt=d.priceTarget||{};
   var eBadge=d.earningsNote?'<div class="earnings-badge">📅 '+d.earningsNote+'</div>':'';
@@ -937,10 +1129,7 @@ function renderResults(d,ticker){
     +'<div class="card verdict '+sc+' aup"><div class="v-row"><div class="v-signal">'+arrow+'</div><div class="v-conf">'+d.confidence+'%</div></div><div class="v-summary">'+d.summary+'</div>'+eBadge+'<div class="v-bar-wrap"><div class="v-bar-lbl"><span>Confidence</span><span>'+d.confidence+'%</span></div><div class="v-bar-track"><div class="v-bar-fill" id="barFill" style="width:0%"></div></div></div></div>'
     +'<div class="targets aup"><div class="tgt bt"><div class="tgt-lbl">Bear</div><div class="tgt-val">'+(pt.bear||'—')+'</div><div class="tgt-sub">downside</div></div><div class="tgt bst"><div class="tgt-lbl">Base</div><div class="tgt-val">'+(pt.base||'—')+'</div><div class="tgt-sub">expected</div></div><div class="tgt bt2"><div class="tgt-lbl">Bull</div><div class="tgt-val">'+(pt.bull||'—')+'</div><div class="tgt-sub">upside</div></div></div>'
     +'<div class="card aup"><div class="card-title">Projected Trajectory</div><div class="chart-wrap"><canvas id="fc"></canvas></div></div>'
-    +'<div class="card aup"><div class="card-title">Key Drivers</div>'+fHtml+'</div>'
-    +'<div class="card aup"><div class="card-title">Scenario Analysis</div>'+sHtml+'</div>'
-    +'<div class="opts-card aup"><div class="opts-hdr"><div class="ohd">Scenario</div><div class="ohd s1">Strategy</div><div class="ohd s2">Expiry</div><div class="ohd s3">Fit</div></div>'+optRows+strNote+'</div>'
-    +'<div class="card aup"><div class="card-title">Macro Intelligence</div><div class="macro-ctx"><div class="macro-body">'+d.macroContext+'</div></div></div>';
+    +comboTable;
 
   var el=document.getElementById('results');
   el.innerHTML=html; el.classList.add('on');
